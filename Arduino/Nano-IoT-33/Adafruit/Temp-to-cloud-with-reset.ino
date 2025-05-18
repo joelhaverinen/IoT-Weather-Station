@@ -3,34 +3,34 @@
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 
-// WiFi-tiedot
+// WiFi credentials
 #define WIFI_SSID     "xxxx"
 #define WIFI_PASS     "xxxx"
 
-// Adafruit IO -tiedot
+// Adafruit IO credentials
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883
 #define AIO_USERNAME    "xxxx"
 #define AIO_KEY         "xxxx"
 
-// MQTT-asiakas
+// MQTT client
 WiFiClient client;
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 
-// Lämpötila feed
+// Temperature feed
 Adafruit_MQTT_Publish temperatureFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/temperature");
 
-// DHT-anturi
+// DHT sensor
 #define DHTPIN 2
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
-// Ajastin resettiä varten
-unsigned long resetInterval = 900000; // 15 min = 900 000 ms
+// Timer for reset
+unsigned long resetInterval = 900000; // 15 min = 900,000 ms
 unsigned long startTime = 0;
 
 void hardResetWithLED() {
-  Serial.println("Reset: vilkutetaan LED...");
+  Serial.println("Reset: blinking LED...");
   pinMode(LED_BUILTIN, OUTPUT);
   for (int i = 0; i < 3; i++) {
     digitalWrite(LED_BUILTIN, HIGH);
@@ -49,10 +49,10 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  // Aloita ajastin
+  // Start the timer
   startTime = millis();
 
-  // Yhdistä WiFiin
+  // Connect to WiFi
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -62,19 +62,19 @@ void setup() {
 }
 
 void loop() {
-  // Tarkista onko aika suorittaa reset
+  // Check if it's time to reset
   if (millis() - startTime >= resetInterval) {
-    Serial.println("15 minuuttia kulunut – suoritetaan reset.");
+    Serial.println("15 minutes passed – performing reset.");
     hardResetWithLED();
   }
 
-  // Yhdistä MQTT:hen
+  // Connect to MQTT
   if (!mqtt.connected()) {
     reconnect();
   }
   mqtt.processPackets(10000);
   
-  // Lue lämpötila
+  // Read temperature
   float temp = dht.readTemperature();
   if (isnan(temp)) {
     Serial.println("Failed to read from DHT sensor!");
@@ -85,7 +85,7 @@ void loop() {
   Serial.println(temp);
   temperatureFeed.publish(temp);
 
-  delay(60000); // lähetä 60 sek välein
+  delay(60000); // send every 60 seconds
 }
 
 void reconnect() {
