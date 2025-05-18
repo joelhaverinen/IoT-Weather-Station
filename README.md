@@ -17,8 +17,8 @@ This Arduino project reads temperature data from a DHT22 sensor and uploads it t
 
 - Arduino Nano 33 IoT  
 - DHT22 Temperature Sensor  
-- WiFi network access  
-- Adafruit IO account
+- WiFi network
+- Adafruit IO (free)
 
 ## Installation
 
