@@ -1,3 +1,6 @@
+
+## IoT Weather Station
+
 This Arduino project reads temperature data from a DHT22 sensor and uploads it to Adafruit IO using the MQTT protocol over WiFi. To ensure long-term stability, the device performs a hard reset every 15 minutes.
 
 ## Features
