@@ -8,7 +8,6 @@ This Arduino project reads temperature data from a DHT22 sensor and uploads it t
 - WiFi connectivity via WiFiNINA
 - Temperature readings from DHT22
 - MQTT publishing to Adafruit IO
-- Automatic system reset every 15 minutes to prevent hangs or connection drops
 
 
 ## Hardware
